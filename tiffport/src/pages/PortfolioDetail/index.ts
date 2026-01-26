@@ -1,0 +1,1 @@
+export { PortfolioDetail } from './PortfolioDetail'
