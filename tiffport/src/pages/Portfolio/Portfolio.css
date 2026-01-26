@@ -1,1 +1,19 @@
-/* Portfolio page styles */
+.portfolio {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.portfolio-cards {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 4rem;
+}
+
+.portfolio-ground {
+  height: 60px;
+  background-color: var(--ground-color);
+}
