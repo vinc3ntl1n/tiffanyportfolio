@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
 
 :root {
-  --primary-color: #7B1F1F;
-  --dark-bg: #2D1515;
-  --light-bg: #FDF8F6;
+  --primary-color: #310e0e;
+  --dark-bg: #1a0707;
+  --light-bg: #FAF3ED;
   --text-dark: #1A1A1A;
   --text-light: #FFFFFF;
   --ground-color: #8B7355;
@@ -48,12 +48,10 @@ h1, h2, h3 {
 }
 
 .image-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #e0d6d0;
-  border: 2px dashed #999;
-  color: #666;
-  font-style: italic;
-  border-radius: 8px;
+  display: block;
+  background: none;
+  border: none;
+  color: inherit;
+  font-style: normal;
+  border-radius: 0;
 }

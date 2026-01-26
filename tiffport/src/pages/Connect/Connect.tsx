@@ -8,9 +8,9 @@ export function Connect() {
       </div>
       <div className="connect-content">
         <h1 className="connect-name">tiffany lin</h1>
-        <p className="connect-email">email@example.com</p>
-        <a href="https://linkedin.com/in/yourprofile" className="connect-linkedin">
-          linkedin.com/in/yourprofile
+        <p className="connect-email">tiffqlin@gmail.com</p>
+        <a href="https://www.linkedin.com/in/tiffanyqlin/" className="connect-linkedin">
+          linkedin.com/in/tiffanyqlin
         </a>
       </div>
     </div>
