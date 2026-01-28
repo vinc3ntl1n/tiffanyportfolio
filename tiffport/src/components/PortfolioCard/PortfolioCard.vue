@@ -1,15 +1,14 @@
 <template>
-  <router-link :to="link" class="portfolio-card">
+  <div class="portfolio-card" role="button" tabindex="0">
     <div class="portfolio-card-image">
       <slot />
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script setup lang="ts">
 defineProps<{
   title: string
-  link: string
 }>()
 </script>
 

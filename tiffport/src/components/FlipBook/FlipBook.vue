@@ -32,7 +32,6 @@ const emit = defineEmits<{
 const flipbook = ref<InstanceType<typeof Flipbook> | null>(null)
 const currentPage = ref(1)
 
-// Add null as first element so page 1 (tiffany) shows as single centered cover
 const pagesWithCover = computed(() => [null, ...props.pages])
 
 const totalPages = computed(() => props.pages.length)
@@ -79,8 +78,8 @@ onUnmounted(() => {
 }
 
 .flipbook {
-  width: 90vw;
-  height: 70vh;
+  width: 95vw;
+  height: 85vh;
 }
 
 .flipbook-nav {
