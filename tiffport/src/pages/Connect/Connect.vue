@@ -5,7 +5,7 @@
     </div>
     <div class="connect-content">
       <h1 class="connect-name">tiffany lin</h1>
-      <p class="connect-email">tiffqlin@gmail.com</p>
+      <a href="mailto:tiffqlin@gmail.com" class="connect-email">tiffqlin@gmail.com</a>
       <a href="https://www.linkedin.com/in/tiffanyqlin/" class="connect-linkedin">
         linkedin.com/in/tiffanyqlin
       </a>
