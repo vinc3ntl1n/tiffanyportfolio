@@ -3,25 +3,24 @@
     <button class="flipbook-nav prev" @click="flipLeft">‹</button>
     <Flipbook
       class="flipbook"
-      :pages="virtualPages"
+      :pages="pagesArray"
       :flip-duration="400"
       :centering="true"
       :click-to-zoom="false"
       :drag-to-flip="true"
-      :nPolygons="5"
-      ref="flipbook"
-      @flip-left-end="onFlip"
-      @flip-right-end="onFlip"
+      ref="flipbookEl"
+      @flip-left-end="onFlipEnd"
+      @flip-right-end="onFlipEnd"
     />
     <button class="flipbook-nav next" @click="flipRight">›</button>
     <div class="flipbook-indicator">
-      {{ currentPage }} / {{ totalPages }}
+      {{ displayPage }} / {{ totalPages }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, markRaw, watch } from 'vue'
 import Flipbook from 'flipbook-vue'
 
 const props = defineProps<{
@@ -32,90 +31,73 @@ const emit = defineEmits<{
   (e: 'pageChange', page: number): void
 }>()
 
-const flipbook = ref<InstanceType<typeof Flipbook> | null>(null)
-const currentPage = ref(1)
+// Store the raw DOM element ref, NOT a reactive component instance
+const flipbookEl = ref<HTMLElement | null>(null)
 
-const pagesWithCover = computed(() => [null, ...props.pages])
+// Keep flipbook instance completely outside Vue's reactivity system
+let flipbookInstance: any = null
 
+const displayPage = ref(1)
+const isAnimating = ref(false)
 const totalPages = computed(() => props.pages.length)
 
-const TRANSPARENT_PIXEL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iODAwIiB2aWV3Qm94PSIwIDAgNjAwIDgwMCI+PC9zdmc+'
-const LOAD_BUFFER = 1
-
-const virtualPages = ref<Array<string|null>>([])
-
-const initVirtualPages = () => {
-  virtualPages.value = pagesWithCover.value.map(p => p === null ? null : TRANSPARENT_PIXEL)
-  updateVirtualPages()
-}
-
-const updateVirtualPages = () => {
-  const current = currentPage.value
-  const total = virtualPages.value.length
-  
-  const start = Math.max(0, current - LOAD_BUFFER)
-  const end = Math.min(total, current + LOAD_BUFFER + 1)
-  
-  for (let i = 0; i < total; i++) {
-    const pageUrl = pagesWithCover.value[i]
-    if (pageUrl === null) continue
-    
-    if (i >= start && i < end) {
-      if (virtualPages.value[i] !== pageUrl) {
-        virtualPages.value[i] = pageUrl
-      }
-    } else {
-      if (virtualPages.value[i] !== TRANSPARENT_PIXEL) {
-        virtualPages.value[i] = TRANSPARENT_PIXEL
-      }
-    }
-  }
-}
-
-import { watch } from 'vue'
-
-watch(() => props.pages, () => {
-  initVirtualPages()
-}, { immediate: true })
-
-watch(currentPage, () => {
-  updateVirtualPages()
+const pagesArray = computed(() => {
+  return Object.freeze([null, ...props.pages]) as (string | null)[]
 })
 
 onMounted(() => {
-  console.log('FlipBook: Mounted (Optimization V2.1)')
-  initVirtualPages()
+  console.log('FlipBook: Mounted (V9 - markRaw Instance)')
+  window.addEventListener('keydown', handleKeyDown)
+  
+  if (flipbookEl.value) {
+    const el = flipbookEl.value as any
+    if (el) {
+      flipbookInstance = markRaw(el)
+    }
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown)
+  flipbookInstance = null
 })
 
 const flipLeft = () => {
-  flipbook.value?.flipLeft()
+  if (isAnimating.value || !flipbookInstance) return
+  
+  if (flipbookInstance.canFlipLeft) {
+    isAnimating.value = true
+    flipbookInstance.flipLeft()
+  }
 }
 
 const flipRight = () => {
-  flipbook.value?.flipRight()
+  if (isAnimating.value || !flipbookInstance) return
+  
+  if (flipbookInstance.canFlipRight) {
+    isAnimating.value = true
+    flipbookInstance.flipRight()
+  }
 }
 
-const onFlip = (pageNum: number) => {
-  if (flipbook.value) {
-    currentPage.value = flipbook.value.page || 1
-    emit('pageChange', currentPage.value)
-  }
+const onFlipEnd = () => {
+  setTimeout(() => {
+    isAnimating.value = false
+    
+    if (flipbookInstance) {
+      const page = flipbookInstance.page
+      if (typeof page === 'number' && page !== displayPage.value) {
+        displayPage.value = page
+        emit('pageChange', page)
+      }
+    }
+  }, 0)
 }
 
 const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowLeft') flipLeft()
   if (e.key === 'ArrowRight') flipRight()
 }
-
-
-
-onMounted(() => {
-  window.addEventListener('keydown', handleKeyDown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleKeyDown)
-})
 </script>
 
 <style scoped>
