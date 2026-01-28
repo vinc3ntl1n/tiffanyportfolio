@@ -17,10 +17,11 @@
   height: 48px;
   background-color: var(--ground-color);
   border-radius: 0 0 24px 24px;
-  box-shadow: 0 8px 24px rgba(139,115,85,0.18);
+  box-shadow: 0 8px 24px rgba(139, 115, 85, 0.18);
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100vw;
   margin-top: 0;
   z-index: 10;
+}

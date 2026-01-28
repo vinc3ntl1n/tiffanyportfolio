@@ -7,7 +7,6 @@ interface LayoutProps {
 }
 
 export function Layout({ theme }: LayoutProps) {
-  // TODO: Implement layout wrapper
   return (
     <div className={`layout layout--${theme}`}>
       <Navbar />

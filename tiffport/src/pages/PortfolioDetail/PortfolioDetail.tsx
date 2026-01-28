@@ -1,46 +1,56 @@
-import { useParams } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
-import ePub from 'epubjs'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { FlipBook } from '../../components'
 import './PortfolioDetail.css'
 
-const categoryBooks: Record<string, string> = {
-  graduate: '/book1.epub',
-  undergrad: '/book1.epub',
-  professional: '/book1.epub',
+// Configuration for different portfolio books
+interface BookConfig {
+  totalPages: number
+  basePath: string
+  prefix: string
+}
+
+const BOOK_CONFIGS: Record<string, BookConfig> = {
+  graduate: {
+    totalPages: 108,
+    basePath: '/book1/',
+    prefix: 'LinT_Portfolio_2026'
+  },
+  undergrad: {
+    totalPages: 108,
+    basePath: '/book1/',
+    prefix: 'LinT_Portfolio_2026'
+  },
+}
+
+function generatePageUrls(config: BookConfig): string[] {
+  const pages: string[] = []
+  // Page 1 is "LinT_Portfolio_2026.jpg" (the tiffany title - cover)
+  // Page 2+ is "LinT_Portfolio_2026{n}.jpg"
+  for (let i = 1; i <= config.totalPages; i++) {
+    if (i === 1) {
+      pages.push(`${config.basePath}${config.prefix}.jpg`)
+    } else {
+      pages.push(`${config.basePath}${config.prefix}${i}.jpg`)
+    }
+  }
+  return pages
 }
 
 export function PortfolioDetail() {
   const { category } = useParams<{ category: string }>()
-  const viewerRef = useRef<HTMLDivElement>(null)
-  const renditionRef = useRef<ReturnType<ReturnType<typeof ePub>['renderTo']> | null>(null)
+  const navigate = useNavigate()
+
+  const config = BOOK_CONFIGS[category || 'graduate'] || BOOK_CONFIGS.graduate
+  const pages = generatePageUrls(config)
 
   useEffect(() => {
-    if (!viewerRef.current || !category) return
-
-    const bookUrl = categoryBooks[category] || '/book1.epub'
-    const book = ePub(bookUrl)
-    
-    const rendition = book.renderTo(viewerRef.current, {
-      width: '100%',
-      height: '100%',
-      spread: 'always',
-    })
-    
-    rendition.display()
-    renditionRef.current = rendition
-
-    return () => {
-      book.destroy()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') navigate(-1)
     }
-  }, [category])
-
-  const handlePrev = () => {
-    renditionRef.current?.prev()
-  }
-
-  const handleNext = () => {
-    renditionRef.current?.next()
-  }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [navigate])
 
   return (
     <div className="portfolio-detail">
@@ -48,9 +58,7 @@ export function PortfolioDetail() {
         <span className="portfolio-detail-category">{category}</span>
       </aside>
       <main className="portfolio-detail-content">
-        <button className="nav-button prev" onClick={handlePrev}>‹</button>
-        <div className="portfolio-detail-viewer" ref={viewerRef} />
-        <button className="nav-button next" onClick={handleNext}>›</button>
+        <FlipBook pages={pages} />
       </main>
     </div>
   )

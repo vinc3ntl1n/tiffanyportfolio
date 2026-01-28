@@ -3,7 +3,7 @@
   justify-content: center;
   gap: 2.2rem;
   padding: 0.7rem 0;
-    background: none;
+  background: none;
   align-items: center;
   min-height: 4.2rem;
   flex-wrap: nowrap;
@@ -11,18 +11,17 @@
 
 .nav-link {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 500;
   letter-spacing: 0.18em;
-    color: var(--primary-color);
-    font-weight: 800;
+  color: var(--primary-color);
   text-transform: uppercase;
   padding: 0.5rem 1.2rem;
   border-radius: 0;
   transform-origin: center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.2s ease,
-              font-weight 0.15s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s ease,
+    font-weight 0.15s ease;
 }
 
 .nav-link:hover {
@@ -30,16 +29,20 @@
   background: none;
 }
 
-.nav-link.active {
+.nav-link.router-link-exact-active {
   font-weight: 900;
-  transform: scale(1.25);
-    background: none;
-    color: var(--primary-color);
-    font-weight: 900;
-    border-radius: 0;
+  transform: scale(1.15);
+  background: none;
+  color: var(--primary-color);
+  border-radius: 0;
   box-shadow: none;
 }
 
 .layout--dark .nav-link {
+  color: var(--text-light);
+}
+
+.layout--dark .nav-link.router-link-active,
+.layout--dark .nav-link.router-link-exact-active {
   color: var(--text-light);
 }
