@@ -39,7 +39,7 @@ const pagesWithCover = computed(() => [null, ...props.pages])
 
 const totalPages = computed(() => props.pages.length)
 
-const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+const TRANSPARENT_PIXEL = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iODAwIiB2aWV3Qm94PSIwIDAgNjAwIDgwMCI+PC9zdmc+'
 const LOAD_BUFFER = 1
 
 const virtualPages = ref<Array<string|null>>([])
