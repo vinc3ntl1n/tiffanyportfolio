@@ -61,8 +61,11 @@ const updateVirtualPages = () => {
     if (pageUrl === null) continue
     
     if (i >= start && i < end) {
-      if (virtualPages.value[i] !== pageUrl) {
-        virtualPages.value[i] = pageUrl
+      // Inside buffer: Load real image
+      // DEBUG: Force small image to test memory hypothesis
+      const DEBUG_IMAGE = '/10-1.thumb128.png' 
+      if (virtualPages.value[i] !== DEBUG_IMAGE) {
+        virtualPages.value[i] = DEBUG_IMAGE
       }
     } else {
       if (virtualPages.value[i] !== TRANSPARENT_PIXEL) {
