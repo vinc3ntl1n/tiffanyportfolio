@@ -8,6 +8,7 @@
       :centering="true"
       :click-to-zoom="false"
       :drag-to-flip="true"
+      :single-page="true"
       ref="flipbook"
       @flip-left-end="onFlip"
       @flip-right-end="onFlip"
