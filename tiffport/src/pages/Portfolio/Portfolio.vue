@@ -3,19 +3,14 @@
     <div class="portfolio-main-content">
       <div class="portfolio-shelf-container">
         <div class="portfolio-cards">
-          <PortfolioCard title="graduate" @click="openBook('graduate')">
+          <PortfolioCard 
+            v-for="book in books" 
+            :key="book.id"
+            :title="book.title" 
+            @click="openBook(book.id)"
+          >
             <div class="book-cover-wrapper">
-              <img src="/book1/LinT_Portfolio_2026.jpg" alt="Graduate Portfolio Cover" class="book-cover-image" />
-            </div>
-          </PortfolioCard>
-          <PortfolioCard title="undergrad" @click="openBook('undergrad')">
-            <div class="book-cover-wrapper">
-              <img src="/book1/LinT_Portfolio_2026.jpg" alt="Undergrad Portfolio Cover" class="book-cover-image" />
-            </div>
-          </PortfolioCard>
-          <PortfolioCard title="professional" @click="openBook('professional')">
-            <div class="book-cover-wrapper">
-              <img src="/book1/LinT_Portfolio_2026.jpg" alt="Professional Portfolio Cover" class="book-cover-image" />
+              <img :src="book.coverImage" :alt="book.title + ' Portfolio Cover'" class="book-cover-image" />
             </div>
           </PortfolioCard>
         </div>
@@ -40,49 +35,26 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import PortfolioCard from '../../components/PortfolioCard/PortfolioCard.vue'
 import FlipBook from '../../components/FlipBook/FlipBook.vue'
+import { books, type BookConfig } from '../../config/books'
 
-interface BookConfig {
-  totalPages: number
-  basePath: string
-  prefix: string
-}
-
-const BOOK_CONFIGS: Record<string, BookConfig> = {
-  graduate: {
-    totalPages: 108,
-    basePath: '/book1/',
-    prefix: 'LinT_Portfolio_2026'
-  },
-  undergrad: {
-    totalPages: 108,
-    basePath: '/book1/',
-    prefix: 'LinT_Portfolio_2026'
-  },
-  professional: {
-    totalPages: 108,
-    basePath: '/book1/',
-    prefix: 'LinT_Portfolio_2026'
-  }
-}
-
-const selectedBook = ref<string | null>(null)
+const selectedBookId = ref<string | null>(null)
 const isModalOpen = ref(false)
 
-const openBook = (book: string) => {
-  selectedBook.value = book
+const openBook = (bookId: string) => {
+  selectedBookId.value = bookId
   isModalOpen.value = true
 }
 
 const closeBook = () => {
   isModalOpen.value = false
   setTimeout(() => {
-    selectedBook.value = null
+    selectedBookId.value = null
   }, 300)
 }
 
 const currentConfig = computed(() => {
-  if (!selectedBook.value) return BOOK_CONFIGS.graduate
-  return BOOK_CONFIGS[selectedBook.value] || BOOK_CONFIGS.graduate
+  if (!selectedBookId.value) return books[0]
+  return books.find(b => b.id === selectedBookId.value) || books[0]
 })
 
 function generatePageUrls(config: BookConfig): string[] {

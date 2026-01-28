@@ -3,7 +3,7 @@
     <button class="flipbook-nav prev" @click="flipLeft">‹</button>
     <Flipbook
       class="flipbook"
-      :pages="pagesWithCover"
+      :pages="virtualPages"
       :flip-duration="400"
       :centering="true"
       ref="flipbook"
@@ -36,6 +36,22 @@ const pagesWithCover = computed(() => [null, ...props.pages])
 
 const totalPages = computed(() => props.pages.length)
 
+const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+const LOAD_BUFFER = 5
+
+const virtualPages = computed(() => {
+  return pagesWithCover.value.map((pageUrl, index) => {
+    if (pageUrl === null) return null
+    
+    const distance = Math.abs(index - currentPage.value)
+    if (distance <= LOAD_BUFFER) {
+      return pageUrl
+    }
+    
+    return TRANSPARENT_PIXEL
+  })
+})
+
 const flipLeft = () => {
   flipbook.value?.flipLeft()
 }
@@ -44,29 +60,11 @@ const flipRight = () => {
   flipbook.value?.flipRight()
 }
 
-const onFlip = () => {
+const onFlip = (pageNum: number) => {
   if (flipbook.value) {
     currentPage.value = flipbook.value.page || 1
     emit('pageChange', currentPage.value)
-    preloadImages()
   }
-}
-
-const preloadImages = () => {
-  const pagesToPreload: number[] = []
-  const current = currentPage.value
-  
-  for (let i = 0; i < 6; i++) {
-    const page = current + i
-    if (page <= props.pages.length) {
-      pagesToPreload.push(page)
-    }
-  }
-  
-  pagesToPreload.forEach((page) => {
-    const img = new Image()
-    img.src = props.pages[page - 1]
-  })
 }
 
 const handleKeyDown = (e: KeyboardEvent) => {
@@ -76,7 +74,6 @@ const handleKeyDown = (e: KeyboardEvent) => {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
-  preloadImages()
 })
 
 onUnmounted(() => {
