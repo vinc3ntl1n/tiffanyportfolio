@@ -1,5 +1,5 @@
 <template>
-  <div class="flipbook-container" @wheel.prevent="onWheel">
+  <div class="flipbook-container">
     <button class="flipbook-nav prev" @click="flipLeft">‹</button>
     <Flipbook
       class="flipbook"
@@ -61,11 +61,8 @@ const updateVirtualPages = () => {
     if (pageUrl === null) continue
     
     if (i >= start && i < end) {
-      // Inside buffer: Load real image
-      // DEBUG: Force small image to test memory hypothesis
-      const DEBUG_IMAGE = '/10-1.thumb128.png' 
-      if (virtualPages.value[i] !== DEBUG_IMAGE) {
-        virtualPages.value[i] = DEBUG_IMAGE
+      if (virtualPages.value[i] !== pageUrl) {
+        virtualPages.value[i] = pageUrl
       }
     } else {
       if (virtualPages.value[i] !== TRANSPARENT_PIXEL) {
@@ -110,15 +107,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowRight') flipRight()
 }
 
-const onWheel = (e: WheelEvent) => {
-  if (Math.abs(e.deltaY) < 30) return 
-  
-  if (e.deltaY > 0) {
-    flipRight()
-  } else {
-    flipLeft()
-  }
-}
+
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
