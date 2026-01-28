@@ -1,11 +1,13 @@
 <template>
-  <div class="flipbook-container">
+  <div class="flipbook-container" @wheel.prevent="onWheel">
     <button class="flipbook-nav prev" @click="flipLeft">‹</button>
     <Flipbook
       class="flipbook"
       :pages="virtualPages"
       :flip-duration="400"
       :centering="true"
+      :click-to-zoom="false"
+      :drag-to-flip="true"
       ref="flipbook"
       @flip-left-end="onFlip"
       @flip-right-end="onFlip"
@@ -37,7 +39,7 @@ const pagesWithCover = computed(() => [null, ...props.pages])
 const totalPages = computed(() => props.pages.length)
 
 const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-const LOAD_BUFFER = 5
+const LOAD_BUFFER = 2
 
 const virtualPages = computed(() => {
   return pagesWithCover.value.map((pageUrl, index) => {
@@ -70,6 +72,16 @@ const onFlip = (pageNum: number) => {
 const handleKeyDown = (e: KeyboardEvent) => {
   if (e.key === 'ArrowLeft') flipLeft()
   if (e.key === 'ArrowRight') flipRight()
+}
+
+const onWheel = (e: WheelEvent) => {
+  if (Math.abs(e.deltaY) < 30) return 
+  
+  if (e.deltaY > 0) {
+    flipRight()
+  } else {
+    flipLeft()
+  }
 }
 
 onMounted(() => {
