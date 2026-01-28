@@ -8,7 +8,7 @@
       :centering="true"
       :click-to-zoom="false"
       :drag-to-flip="true"
-      :single-page="true"
+      :nPolygons="5"
       ref="flipbook"
       @flip-left-end="onFlip"
       @flip-right-end="onFlip"
@@ -40,7 +40,7 @@ const pagesWithCover = computed(() => [null, ...props.pages])
 const totalPages = computed(() => props.pages.length)
 
 const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-const LOAD_BUFFER = 2
+const LOAD_BUFFER = 1
 
 const virtualPages = ref<Array<string|null>>([])
 
@@ -65,7 +65,6 @@ const updateVirtualPages = () => {
         virtualPages.value[i] = pageUrl
       }
     } else {
-      // Outside buffer: Unload (placeholder)
       if (virtualPages.value[i] !== TRANSPARENT_PIXEL) {
         virtualPages.value[i] = TRANSPARENT_PIXEL
       }
@@ -73,7 +72,6 @@ const updateVirtualPages = () => {
   }
 }
 
-// Watchers
 import { watch } from 'vue'
 
 watch(() => props.pages, () => {
