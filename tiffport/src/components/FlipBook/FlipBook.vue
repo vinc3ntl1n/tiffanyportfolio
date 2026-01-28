@@ -41,17 +41,51 @@ const totalPages = computed(() => props.pages.length)
 const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
 const LOAD_BUFFER = 2
 
-const virtualPages = computed(() => {
-  return pagesWithCover.value.map((pageUrl, index) => {
-    if (pageUrl === null) return null
+const virtualPages = ref<Array<string|null>>([])
+
+const initVirtualPages = () => {
+  virtualPages.value = pagesWithCover.value.map(p => p === null ? null : TRANSPARENT_PIXEL)
+  updateVirtualPages()
+}
+
+const updateVirtualPages = () => {
+  const current = currentPage.value
+  const total = virtualPages.value.length
+  
+  const start = Math.max(0, current - LOAD_BUFFER)
+  const end = Math.min(total, current + LOAD_BUFFER + 1)
+  
+  for (let i = 0; i < total; i++) {
+    const pageUrl = pagesWithCover.value[i]
+    if (pageUrl === null) continue
     
-    const distance = Math.abs(index - currentPage.value)
-    if (distance <= LOAD_BUFFER) {
-      return pageUrl
+    if (i >= start && i < end) {
+      if (virtualPages.value[i] !== pageUrl) {
+        virtualPages.value[i] = pageUrl
+      }
+    } else {
+      // Outside buffer: Unload (placeholder)
+      if (virtualPages.value[i] !== TRANSPARENT_PIXEL) {
+        virtualPages.value[i] = TRANSPARENT_PIXEL
+      }
     }
-    
-    return TRANSPARENT_PIXEL
-  })
+  }
+}
+
+// Watchers
+import { watch } from 'vue'
+
+watch(() => props.pages, () => {
+  initVirtualPages()
+}, { immediate: true })
+
+watch(currentPage, () => {
+  updateVirtualPages()
+})
+
+onMounted(() => {
+  console.log('FlipBook: Mounted (Optimization V2.1)')
+  initVirtualPages()
 })
 
 const flipLeft = () => {
