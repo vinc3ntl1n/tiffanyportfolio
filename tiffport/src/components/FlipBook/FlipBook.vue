@@ -48,7 +48,25 @@ const onFlip = () => {
   if (flipbook.value) {
     currentPage.value = flipbook.value.page || 1
     emit('pageChange', currentPage.value)
+    preloadImages()
   }
+}
+
+const preloadImages = () => {
+  const pagesToPreload: number[] = []
+  const current = currentPage.value
+  
+  for (let i = 0; i < 6; i++) {
+    const page = current + i
+    if (page <= props.pages.length) {
+      pagesToPreload.push(page)
+    }
+  }
+  
+  pagesToPreload.forEach((page) => {
+    const img = new Image()
+    img.src = props.pages[page - 1]
+  })
 }
 
 const handleKeyDown = (e: KeyboardEvent) => {
@@ -58,6 +76,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeyDown)
+  preloadImages()
 })
 
 onUnmounted(() => {
