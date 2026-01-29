@@ -124,8 +124,8 @@ const handlePageChange = (pageIndex: number) => {
 
 .book-title-vertical h1 {
   margin: 0;
-  font-family: 'Times New Roman', serif;
-  font-weight: 900; 
+  font-family: 'Maragsa Display', serif;
+  font-weight: normal; 
   font-size: 4rem; 
   color: white;
   letter-spacing: 2px;

@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
 
+@font-face {
+  font-family: 'Maragsa Display';
+  src: url('./assets/fonts/Maragsâ-Display.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary-color: #3C0008;
   --dark-bg: #1a0707;

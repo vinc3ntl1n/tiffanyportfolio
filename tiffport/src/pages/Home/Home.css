@@ -37,12 +37,15 @@
 }
 
 .home-title {
-  font-family: 'Maragsa', 'Playfair Display', serif;
-  font-size: 165px;
+  font-family: 'Maragsa Display', 'Playfair Display', serif;
+  font-size: 200px;
   color: #820a0a;
   margin: 0;
   line-height: 1;
-  font-weight: bold;
+  font-weight: normal;
+  /* Less bold */
+  word-spacing: 0.15em;
+  /* Reduced from 0.4em */
   text-align: right;
 }
 
