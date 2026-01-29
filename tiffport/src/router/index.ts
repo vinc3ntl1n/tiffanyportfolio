@@ -14,6 +14,11 @@ const routes = [
             { path: 'portfolio', component: Portfolio },
             { path: 'portfolio/:category', component: PortfolioDetail },
             { path: 'connect', component: Connect },
+            {
+                path: 'book/:id',
+                component: () => import('../pages/BookReader/BookReader.vue'),
+                meta: { theme: 'dark' }
+            },
         ]
     }
 ]

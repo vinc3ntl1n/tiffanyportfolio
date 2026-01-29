@@ -1,6 +1,6 @@
 <template>
-  <div class="layout">
-    <Navbar />
+  <div class="layout" :class="{ 'layout--dark': route.meta.theme === 'dark' }">
+    <Navbar v-if="route.path !== '/'" />
     <main>
       <router-view />
     </main>
@@ -8,7 +8,10 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import Navbar from '../Navbar/Navbar.vue'
+
+const route = useRoute()
 </script>
 
 <style>

@@ -7,9 +7,6 @@
         <router-link to="/connect" class="home-link">connect</router-link>
       </nav>
     </div>
-    <div class="home-image">
-      <img src="/10-1.thumb128.png" alt="hamster thumbnail" class="image-placeholder" />
-    </div>
   </div>
 </template>
 

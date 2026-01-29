@@ -4,9 +4,7 @@ import { PageFlip } from 'page-flip'
 import './FlipBook.css'
 
 interface FlipBookProps {
-    /** Array of image URLs for the book pages */
     pages: string[]
-    /** Optional callback when page changes */
     onPageChange?: (pageNum: number) => void
 }
 
@@ -31,7 +29,6 @@ export function FlipBook({ pages, onPageChange }: FlipBookProps) {
         const pageElements = bookRef.current.querySelectorAll('.page-content')
         if (pageElements.length === 0) return
 
-        // JPG dimensions: 2100x3000 = aspect ratio 0.7
         const pageFlip = new PageFlip(bookRef.current, {
             width: 350,
             height: 500,

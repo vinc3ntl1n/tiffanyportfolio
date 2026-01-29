@@ -3,15 +3,20 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fbf6f3;
 }
 
 .portfolio-main-content {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-bottom: 5vh;
+  justify-content: flex-start;
+  padding-top: 5vh;
+  padding-bottom: 10vh;
+  gap: 6rem;
 }
 
 .portfolio-shelf-container {
@@ -19,31 +24,53 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  transform: scale(1.8);
-  transform-origin: center center;
+  transform: scale(1.0);
+  transform-origin: center top;
 }
 
 .portfolio-cards {
   display: flex;
   align-items: flex-end;
-  gap: 3rem;
+  gap: 4rem;
   padding: 0 2rem;
   z-index: 10;
   position: relative;
-  margin-bottom: -10px;
+  margin-bottom: 0px;
+}
+
+.book-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.book-wrapper:hover {
+  transform: translateY(-10px);
+}
+
+.book-title-display {
+  font-family: 'Maragsa', 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: #000000;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  line-height: 1;
 }
 
 .portfolio-ground {
-  height: 40px;
-  background-color: #5D4037;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.1);
-  width: 120%;
-  min-width: 600px;
+  height: 20px;
+  background-color: #8D6E63;
+  background: linear-gradient(#8D6E63, #5D4037);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  width: 140%;
+  min-width: 800px;
   z-index: 5;
   position: relative;
+  border-radius: 2px;
 }
 
-/* Modal Styles */
 .portfolio-modal {
   position: fixed;
   top: 0;
@@ -89,7 +116,6 @@
   opacity: 0.8;
 }
 
-/* Modal Transition */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s ease;

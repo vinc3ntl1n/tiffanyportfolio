@@ -1,52 +1,112 @@
 .connect {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   padding: 4rem 2rem;
-  gap: 2rem;
+  background-color: #fbf6f3;
+}
+
+.connect-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 5rem;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .connect-image {
-  flex: 0 0 auto;
-  width: 100%;
-  max-width: 400px;
-  display: flex;
-  justify-content: center;
+  flex: 0 0 400px;
+  height: 400px;
+  background-color: #e0e0e0;
 }
 
-.connect-image .image-placeholder {
+.profile-image {
   width: 100%;
-  height: auto;
-  max-height: 400px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.connect-content {
+.connect-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  text-align: center;
-  align-items: center;
+  justify-content: center;
+  padding-top: 1rem;
 }
 
 .connect-name {
-  font-family: var(--font-display);
-  font-size: 3rem;
-  font-weight: 400;
-  color: var(--primary-color);
+  font-family: 'Garet', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: #820a0a;
+  margin-bottom: 3rem;
+  line-height: 1;
 }
 
-.connect-email,
-.connect-linkedin {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-style: italic;
-  color: var(--primary-color);
+.contact-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 1.5rem 1rem;
+  align-items: baseline;
 }
 
-.connect-email:hover,
-.connect-linkedin:hover {
+.contact-row {
+  display: contents;
+}
+
+.contact-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #000000;
+}
+
+.contact-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  color: #000000;
+  text-decoration: none;
+}
+
+.contact-value:hover {
+  text-decoration: underline;
   opacity: 0.7;
+}
+
+@media (max-width: 850px) {
+  .connect-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .connect-image {
+    flex: 0 0 auto;
+    width: 300px;
+    height: 300px;
+  }
+
+  .connect-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .connect-name {
+    text-align: center;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .contact-label {
+    margin-top: 1rem;
+  }
 }

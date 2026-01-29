@@ -1,8 +1,8 @@
-/* Layout styles */
 .layout {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-color: #fbf6f3;
 }
 
 main {
@@ -10,4 +10,9 @@ main {
     display: flex;
     flex-direction: column;
     position: relative;
+}
+
+.layout--dark {
+    background-color: #310e0e;
+    color: #fbf6f3;
 }

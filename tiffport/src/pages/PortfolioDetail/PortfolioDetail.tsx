@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { FlipBook } from '../../components'
 import './PortfolioDetail.css'
 
-// Configuration for different portfolio books
 interface BookConfig {
   totalPages: number
   basePath: string
@@ -25,8 +24,6 @@ const BOOK_CONFIGS: Record<string, BookConfig> = {
 
 function generatePageUrls(config: BookConfig): string[] {
   const pages: string[] = []
-  // Page 1 is "LinT_Portfolio_2026.jpg" (the tiffany title - cover)
-  // Page 2+ is "LinT_Portfolio_2026{n}.jpg"
   for (let i = 1; i <= config.totalPages; i++) {
     if (i === 1) {
       pages.push(`${config.basePath}${config.prefix}.jpg`)
