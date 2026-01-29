@@ -1,5 +1,5 @@
 diff --git a/node_modules/flipbook-vue/dist/flipbook.cjs.js b/node_modules/flipbook-vue/dist/flipbook.cjs.js
-index 10f806e..064cbad 100644
+index 10f806e..b2bb2bd 100644
 --- a/node_modules/flipbook-vue/dist/flipbook.cjs.js
 +++ b/node_modules/flipbook-vue/dist/flipbook.cjs.js
 @@ -14,44 +14,44 @@ var Matrix = /*@__PURE__*/(function () {
@@ -263,16 +263,20 @@ index 10f806e..064cbad 100644
        var x;
        if (this.displayedPages === 1) {
          return this.viewWidth - this.xMargin;
-@@ -348,7 +348,7 @@ var script = {
+@@ -348,21 +348,24 @@ var script = {
          }
        }
      },
 -    centerOffset: function() {
 +    centerOffset: function () {
++      var this$1$1 = this;
        var retval;
        retval = this.centering ? Math.round(this.viewWidth / 2 - (this.boundingLeft + this.boundingRight) / 2) : 0;
        if (this.currentCenterOffset === null && this.imageWidth !== null) {
-@@ -356,13 +356,13 @@ var script = {
+-        this.currentCenterOffset = retval;
++        queueMicrotask(function () {
++          if (this$1$1.currentCenterOffset !== retval) this$1$1.currentCenterOffset = retval;
++        });
        }
        return retval;
      },
@@ -289,7 +293,7 @@ index 10f806e..064cbad 100644
        var w;
        w = (this.boundingRight - this.boundingLeft) * this.zoom;
        if (w < this.viewWidth) {
-@@ -371,7 +371,7 @@ var script = {
+@@ -371,7 +374,7 @@ var script = {
          return (this.boundingLeft + this.centerOffsetSmoothed) * this.zoom;
        }
      },
@@ -298,7 +302,7 @@ index 10f806e..064cbad 100644
        var w;
        w = (this.boundingRight - this.boundingLeft) * this.zoom;
        if (w < this.viewWidth) {
-@@ -380,7 +380,7 @@ var script = {
+@@ -380,7 +383,7 @@ var script = {
          return (this.boundingRight + this.centerOffsetSmoothed) * this.zoom - this.viewWidth;
        }
      },
@@ -307,7 +311,7 @@ index 10f806e..064cbad 100644
        var h;
        h = this.pageHeight * this.zoom;
        if (h < this.viewHeight) {
-@@ -389,7 +389,7 @@ var script = {
+@@ -389,7 +392,7 @@ var script = {
          return this.yMargin * this.zoom;
        }
      },
@@ -316,7 +320,7 @@ index 10f806e..064cbad 100644
        var h;
        h = this.pageHeight * this.zoom;
        if (h < this.viewHeight) {
-@@ -398,14 +398,14 @@ var script = {
+@@ -398,14 +401,14 @@ var script = {
          return (this.yMargin + this.pageHeight) * this.zoom - this.viewHeight;
        }
      },
@@ -334,7 +338,7 @@ index 10f806e..064cbad 100644
      window.addEventListener('resize', this.onResize, {
        passive: true
      });
-@@ -413,13 +413,13 @@ var script = {
+@@ -413,13 +416,13 @@ var script = {
      this.zoom = this.zooms_[0];
      return this.goToPage(this.startPage);
    },
@@ -350,7 +354,7 @@ index 10f806e..064cbad 100644
        var viewport;
        viewport = this.$refs.viewport;
        if (!viewport) {
-@@ -435,13 +435,13 @@ var script = {
+@@ -435,13 +438,13 @@ var script = {
        this.minX = 2e308;
        return this.maxX = -2e308;
      },
@@ -367,7 +371,7 @@ index 10f806e..064cbad 100644
  
        var url;
        if (hiRes && this.zoom > 1 && !this.zooming) {
-@@ -452,8 +452,8 @@ var script = {
+@@ -452,8 +455,8 @@ var script = {
        }
        return this.pages[page] || null;
      },
@@ -378,7 +382,7 @@ index 10f806e..064cbad 100644
  
        var url;
        url = this.pageUrl(page, hiRes);
-@@ -463,19 +463,19 @@ var script = {
+@@ -463,19 +466,20 @@ var script = {
        }
        return url && this.loadImage(url);
      },
@@ -398,11 +402,50 @@ index 10f806e..064cbad 100644
      },
 -    makePolygonArray: function(face) {
 +    makePolygonArray: function (face) {
++      var this$1$1 = this;
        var bgPos, dRadian, dRotate, direction, i, image, j, lighting, m, originRight, pageMatrix, pageRotation, pageX, polygonWidth, progress, rad, radian, radius, ref, results, rotate, theta, x, x0, x1, z;
        if (!this.flip.direction) {
          return [];
-@@ -599,7 +599,7 @@ var script = {
+@@ -486,7 +490,10 @@ var script = {
+         progress = 1 - progress;
+         direction = this.forwardDirection;
        }
+-      this.flip.opacity = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++      var opacityVal = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++      queueMicrotask(function () {
++        if (this$1$1.flip.opacity !== opacityVal) this$1$1.flip.opacity = opacityVal;
++      });
+       image = face === 'front' ? this.flip.frontImage : this.flip.backImage;
+       polygonWidth = this.pageWidth / this.nPolygons;
+       pageX = this.xMargin;
+@@ -571,8 +578,8 @@ var script = {
+         rotate = -rotate;
+         dRotate = -dRotate;
+       }
+-      this.minX = 2e308;
+-      this.maxX = -2e308;
++      var localMinX = 2e308;
++      var localMaxX = -2e308;
+       results = [];
+       for (i = j = 0, ref = this.nPolygons; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+         bgPos = (i / (this.nPolygons - 1) * 100) + "% 0px";
+@@ -590,16 +597,20 @@ var script = {
+         m.rotateY(-rotate);
+         x0 = m.transformX(0);
+         x1 = m.transformX(polygonWidth);
+-        this.maxX = Math.max(Math.max(x0, x1), this.maxX);
+-        this.minX = Math.min(Math.min(x0, x1), this.minX);
++        localMaxX = Math.max(Math.max(x0, x1), localMaxX);
++        localMinX = Math.min(Math.min(x0, x1), localMinX);
+         lighting = this.computeLighting(pageRotation - rotate, dRotate);
+         radian += dRadian;
+         rotate += dRotate;
+         results.push([face + i, image, lighting, bgPos, m.toString(), Math.abs(Math.round(z))]);
+       }
++      queueMicrotask(function () {
++        if (this$1$1.minX !== localMinX) this$1$1.minX = localMinX;
++        if (this$1$1.maxX !== localMaxX) this$1$1.maxX = localMaxX;
++      });
        return results;
      },
 -    computeLighting: function(rot, dRotate) {
@@ -410,7 +453,7 @@ index 10f806e..064cbad 100644
        var DEG, POW, blackness, diffuse, gradients, lightingPoints, specular;
        gradients = [];
        lightingPoints = [-0.5, -0.25, 0, 0.25, 0.5];
-@@ -614,13 +614,13 @@ var script = {
+@@ -614,13 +625,13 @@ var script = {
          DEG = 30;
          POW = 200;
          specular = lightingPoints.map(function (d) {
@@ -426,7 +469,7 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        if (direction !== this.forwardDirection) {
-@@ -661,7 +661,7 @@ var script = {
+@@ -661,7 +672,7 @@ var script = {
          });
        });
      },
@@ -435,7 +478,7 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        var animate, duration, startRatio, t0;
-@@ -678,14 +678,15 @@ var script = {
+@@ -678,14 +689,15 @@ var script = {
            if (ratio > 1) {
              ratio = 1;
            }
@@ -454,7 +497,7 @@ index 10f806e..064cbad 100644
              }
              this$1$1.$emit(("flip-" + (this$1$1.flip.direction) + "-end"), this$1$1.page);
              if (this$1$1.displayedPages === 1 && this$1$1.flip.direction === this$1$1.forwardDirection) {
-@@ -701,7 +702,7 @@ var script = {
+@@ -701,7 +713,7 @@ var script = {
        };
        return animate();
      },
@@ -463,7 +506,7 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        var animate, duration, startRatio, t0;
-@@ -717,7 +718,7 @@ var script = {
+@@ -717,7 +729,7 @@ var script = {
            if (ratio < 0) {
              ratio = 0;
            }
@@ -472,7 +515,7 @@ index 10f806e..064cbad 100644
            if (ratio > 0) {
              return animate();
            } else {
-@@ -736,12 +737,12 @@ var script = {
+@@ -736,12 +748,12 @@ var script = {
        };
        return animate();
      },
@@ -487,7 +530,7 @@ index 10f806e..064cbad 100644
        if (this.imageWidth === null) {
          this.imageWidth = (ev.target || ev.path[0]).naturalWidth;
          this.imageHeight = (ev.target || ev.path[0]).naturalHeight;
-@@ -755,8 +756,8 @@ var script = {
+@@ -755,8 +767,8 @@ var script = {
          return this.imageLoadCallback = null;
        }
      },
@@ -498,7 +541,7 @@ index 10f806e..064cbad 100644
  
        if (!this.canZoomIn) {
          return;
-@@ -764,8 +765,8 @@ var script = {
+@@ -764,8 +776,8 @@ var script = {
        this.zoomIndex += 1;
        return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
      },
@@ -509,7 +552,7 @@ index 10f806e..064cbad 100644
  
        if (!this.canZoomOut) {
          return;
-@@ -773,9 +774,9 @@ var script = {
+@@ -773,9 +785,9 @@ var script = {
        this.zoomIndex -= 1;
        return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
      },
@@ -521,7 +564,7 @@ index 10f806e..064cbad 100644
  
        var animate, containerFixedX, containerFixedY, end, endX, endY, fixedX, fixedY, rect, start, startX, startY, t0, viewport;
        viewport = this.$refs.viewport;
-@@ -807,9 +808,14 @@ var script = {
+@@ -807,9 +819,14 @@ var script = {
              ratio = 1;
            }
            ratio = easeInOut(ratio);
@@ -539,7 +582,7 @@ index 10f806e..064cbad 100644
            if (t < this$1$1.zoomDuration) {
              return animate();
            } else {
-@@ -826,11 +832,11 @@ var script = {
+@@ -826,11 +843,11 @@ var script = {
          return this.preloadImages(true);
        }
      },
@@ -553,7 +596,7 @@ index 10f806e..064cbad 100644
        this.touchStartX = touch.pageX;
        this.touchStartY = touch.pageY;
        this.maxMove = 0;
-@@ -844,7 +850,7 @@ var script = {
+@@ -844,7 +861,7 @@ var script = {
          return this.activeCursor = 'all-scroll';
        }
      },
@@ -562,7 +605,7 @@ index 10f806e..064cbad 100644
        var x, y;
        if (this.touchStartX == null) {
          return;
-@@ -889,7 +895,7 @@ var script = {
+@@ -889,7 +906,7 @@ var script = {
        }
        return true;
      },
@@ -571,7 +614,7 @@ index 10f806e..064cbad 100644
        if (this.touchStartX == null) {
          return;
        }
-@@ -906,21 +912,21 @@ var script = {
+@@ -906,21 +923,21 @@ var script = {
        this.touchStartX = null;
        return this.activeCursor = null;
      },
@@ -597,7 +640,7 @@ index 10f806e..064cbad 100644
        this.hasPointerEvents = true;
        if (this.hasTouchEvents) {
          return;
-@@ -935,12 +941,12 @@ var script = {
+@@ -935,12 +952,12 @@ var script = {
  
        }
      },
@@ -612,7 +655,7 @@ index 10f806e..064cbad 100644
        if (this.hasTouchEvents) {
          return;
        }
-@@ -951,7 +957,7 @@ var script = {
+@@ -951,7 +968,7 @@ var script = {
  
        }
      },
@@ -621,7 +664,7 @@ index 10f806e..064cbad 100644
        if (this.hasTouchEvents || this.hasPointerEvents) {
          return;
        }
-@@ -960,21 +966,21 @@ var script = {
+@@ -960,21 +977,21 @@ var script = {
        }
        return this.swipeStart(ev);
      },
@@ -647,7 +690,7 @@ index 10f806e..064cbad 100644
        if (this.wheel === 'scroll' && this.zoom > 1 && this.dragToScroll) {
          this.scrollLeft = this.$refs.viewport.scrollLeft + ev.deltaX;
          this.scrollTop = this.$refs.viewport.scrollTop + ev.deltaY;
-@@ -992,8 +998,8 @@ var script = {
+@@ -992,8 +1009,8 @@ var script = {
          }
        }
      },
@@ -658,7 +701,7 @@ index 10f806e..064cbad 100644
  
        var i, j, k, ref, ref1, ref2, ref3, src;
        for (i = j = ref = this.currentPage - 3, ref1 = this.currentPage + 3; (ref <= ref1 ? j <= ref1 : j >= ref1); i = ref <= ref1 ? ++j : --j) {
-@@ -1008,7 +1014,7 @@ var script = {
+@@ -1008,7 +1025,7 @@ var script = {
          }
        }
      },
@@ -667,7 +710,7 @@ index 10f806e..064cbad 100644
        if (p === null || p === this.page) {
          return;
        }
-@@ -1025,7 +1031,7 @@ var script = {
+@@ -1025,7 +1042,7 @@ var script = {
        this.maxX = -2e308;
        return this.currentCenterOffset = this.centerOffset;
      },
@@ -676,14 +719,19 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        var img;
-@@ -1052,12 +1058,12 @@ var script = {
+@@ -1052,12 +1069,15 @@ var script = {
      }
    },
    watch: {
 -    currentPage: function() {
+-      this.firstPage = this.currentPage;
+-      this.secondPage = this.currentPage + 1;
 +    currentPage: function () {
-       this.firstPage = this.currentPage;
-       this.secondPage = this.currentPage + 1;
++      var this$1$1 = this;
++      queueMicrotask(function () {
++        if (this$1$1.firstPage !== this$1$1.currentPage) this$1$1.firstPage = this$1$1.currentPage;
++        if (this$1$1.secondPage !== this$1$1.currentPage + 1) this$1$1.secondPage = this$1$1.currentPage + 1;
++      });
        return this.preloadImages();
      },
 -    centerOffset: function() {
@@ -691,14 +739,16 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        var animate;
-@@ -1070,10 +1076,12 @@ var script = {
+@@ -1070,18 +1090,21 @@ var script = {
            rate = 0.1;
            diff = this$1$1.centerOffset - this$1$1.currentCenterOffset;
            if (Math.abs(diff) < 0.5) {
 -            this$1$1.currentCenterOffset = this$1$1.centerOffset;
+-            return this$1$1.animatingCenter = false;
 +            var targetOffset = this$1$1.centerOffset;
 +            queueMicrotask(function () { this$1$1.currentCenterOffset = targetOffset; });
-             return this$1$1.animatingCenter = false;
++            queueMicrotask(function () { if (this$1$1.animatingCenter !== false) this$1$1.animatingCenter = false; });
++            return;
            } else {
 -            this$1$1.currentCenterOffset += diff * rate;
 +            var newOffset = this$1$1.currentCenterOffset + diff * rate;
@@ -706,8 +756,9 @@ index 10f806e..064cbad 100644
              return animate();
            }
          });
-@@ -1081,7 +1089,7 @@ var script = {
-       this.animatingCenter = true;
+       };
+-      this.animatingCenter = true;
++      queueMicrotask(function () { if (this$1$1.animatingCenter !== true) this$1$1.animatingCenter = true; });
        return animate();
      },
 -    scrollLeftLimited: function(val) {
@@ -715,7 +766,7 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        if (this.IE) {
-@@ -1092,7 +1100,7 @@ var script = {
+@@ -1092,7 +1115,7 @@ var script = {
          return this.$refs.viewport.scrollLeft = val;
        }
      },
@@ -724,7 +775,7 @@ index 10f806e..064cbad 100644
        var this$1$1 = this;
  
        if (this.IE) {
-@@ -1103,7 +1111,7 @@ var script = {
+@@ -1103,7 +1126,7 @@ var script = {
          return this.$refs.viewport.scrollTop = val;
        }
      },
@@ -733,7 +784,7 @@ index 10f806e..064cbad 100644
        this.fixFirstPage();
        if (!(before != null ? before.length : void 0) && (after != null ? after.length : void 0)) {
          if (this.startPage > 1 && after[0] === null) {
-@@ -1111,7 +1119,7 @@ var script = {
+@@ -1111,7 +1134,7 @@ var script = {
          }
        }
      },
@@ -742,7 +793,7 @@ index 10f806e..064cbad 100644
        return this.goToPage(p);
      }
    }
-@@ -1123,17 +1131,17 @@ var _hoisted_2 = ["src"];
+@@ -1123,17 +1146,17 @@ var _hoisted_2 = ["src"];
  function render(_ctx, _cache) {
    return (vue.openBlock(), vue.createElementBlock("div", null, [
      vue.renderSlot(_ctx.$slots, "default", vue.normalizeProps(vue.guardReactiveProps({
@@ -771,7 +822,7 @@ index 10f806e..064cbad 100644
      vue.createElementVNode("div", {
        class: vue.normalizeClass(["viewport", {
          zoom: _ctx.zooming || _ctx.zoom > 1,
-@@ -1143,58 +1151,58 @@ function render(_ctx, _cache) {
+@@ -1143,58 +1166,58 @@ function render(_ctx, _cache) {
        style: vue.normalizeStyle({ cursor: _ctx.cursor == 'grabbing' ? 'grabbing' : 'auto' }),
        onTouchmove: _cache[7] || (_cache[7] = function () {
          var args = [], len = arguments.length;
@@ -848,7 +899,7 @@ index 10f806e..064cbad 100644
      }, [
        vue.createElementVNode("div", {
          class: "flipbook-container",
-@@ -1205,51 +1213,51 @@ function render(_ctx, _cache) {
+@@ -1205,51 +1228,51 @@ function render(_ctx, _cache) {
            style: vue.normalizeStyle({ cursor: _ctx.canFlipLeft ? 'pointer' : 'auto' }),
            onClick: _cache[0] || (_cache[0] = function () {
              var args = [], len = arguments.length;
@@ -926,7 +977,7 @@ index 10f806e..064cbad 100644
              : vue.createCommentVNode("v-if", true),
            vue.createElementVNode("div", {
              style: vue.normalizeStyle({ opacity: _ctx.flip.opacity })
-@@ -1266,14 +1274,14 @@ function render(_ctx, _cache) {
+@@ -1266,14 +1289,14 @@ function render(_ctx, _cache) {
                  class: vue.normalizeClass(["polygon", { blank: !bgImage }]),
                  key: key,
                  style: vue.normalizeStyle({
@@ -949,7 +1000,7 @@ index 10f806e..064cbad 100644
                }, [
                  vue.withDirectives(vue.createElementVNode("div", {
                    class: "lighting",
-@@ -1295,22 +1303,22 @@ function render(_ctx, _cache) {
+@@ -1295,22 +1318,22 @@ function render(_ctx, _cache) {
              }),
              onTouchstart: _cache[4] || (_cache[4] = function () {
                var args = [], len = arguments.length;
@@ -978,7 +1029,7 @@ index 10f806e..064cbad 100644
            }, null, 36 /* STYLE, HYDRATE_EVENTS */)
          ], 4 /* STYLE */)
        ], 4 /* STYLE */)
-@@ -1318,10 +1326,10 @@ function render(_ctx, _cache) {
+@@ -1318,10 +1341,10 @@ function render(_ctx, _cache) {
    ]))
  }
  
@@ -992,7 +1043,7 @@ index 10f806e..064cbad 100644
  script.render = render;
  script.__scopeId = "data-v-5c04eecf";
 diff --git a/node_modules/flipbook-vue/dist/flipbook.js b/node_modules/flipbook-vue/dist/flipbook.js
-index 68fc59b..02eee82 100644
+index 68fc59b..b1e6e2c 100644
 --- a/node_modules/flipbook-vue/dist/flipbook.js
 +++ b/node_modules/flipbook-vue/dist/flipbook.js
 @@ -10,25 +10,25 @@
@@ -1301,16 +1352,20 @@ index 68fc59b..02eee82 100644
          var x;
          if (this.displayedPages === 1) {
            return this.viewWidth - this.xMargin;
-@@ -459,7 +459,7 @@
+@@ -459,21 +459,24 @@
            }
          }
        },
 -      centerOffset: function() {
 +      centerOffset: function () {
++        var this$1$1 = this;
          var retval;
          retval = this.centering ? Math.round(this.viewWidth / 2 - (this.boundingLeft + this.boundingRight) / 2) : 0;
          if (this.currentCenterOffset === null && this.imageWidth !== null) {
-@@ -467,13 +467,13 @@
+-          this.currentCenterOffset = retval;
++          queueMicrotask(function () {
++            if (this$1$1.currentCenterOffset !== retval) this$1$1.currentCenterOffset = retval;
++          });
          }
          return retval;
        },
@@ -1327,7 +1382,7 @@ index 68fc59b..02eee82 100644
          var w;
          w = (this.boundingRight - this.boundingLeft) * this.zoom;
          if (w < this.viewWidth) {
-@@ -482,7 +482,7 @@
+@@ -482,7 +485,7 @@
            return (this.boundingLeft + this.centerOffsetSmoothed) * this.zoom;
          }
        },
@@ -1336,7 +1391,7 @@ index 68fc59b..02eee82 100644
          var w;
          w = (this.boundingRight - this.boundingLeft) * this.zoom;
          if (w < this.viewWidth) {
-@@ -491,7 +491,7 @@
+@@ -491,7 +494,7 @@
            return (this.boundingRight + this.centerOffsetSmoothed) * this.zoom - this.viewWidth;
          }
        },
@@ -1345,7 +1400,7 @@ index 68fc59b..02eee82 100644
          var h;
          h = this.pageHeight * this.zoom;
          if (h < this.viewHeight) {
-@@ -500,7 +500,7 @@
+@@ -500,7 +503,7 @@
            return this.yMargin * this.zoom;
          }
        },
@@ -1354,7 +1409,7 @@ index 68fc59b..02eee82 100644
          var h;
          h = this.pageHeight * this.zoom;
          if (h < this.viewHeight) {
-@@ -509,14 +509,14 @@
+@@ -509,14 +512,14 @@
            return (this.yMargin + this.pageHeight) * this.zoom - this.viewHeight;
          }
        },
@@ -1372,7 +1427,7 @@ index 68fc59b..02eee82 100644
        window.addEventListener('resize', this.onResize, {
          passive: true
        });
-@@ -524,13 +524,13 @@
+@@ -524,13 +527,13 @@
        this.zoom = this.zooms_[0];
        return this.goToPage(this.startPage);
      },
@@ -1388,7 +1443,7 @@ index 68fc59b..02eee82 100644
          var viewport;
          viewport = this.$refs.viewport;
          if (!viewport) {
-@@ -546,13 +546,13 @@
+@@ -546,13 +549,13 @@
          this.minX = 2e308;
          return this.maxX = -2e308;
        },
@@ -1405,7 +1460,7 @@ index 68fc59b..02eee82 100644
  
          var url;
          if (hiRes && this.zoom > 1 && !this.zooming) {
-@@ -563,8 +563,8 @@
+@@ -563,8 +566,8 @@
          }
          return this.pages[page] || null;
        },
@@ -1416,7 +1471,7 @@ index 68fc59b..02eee82 100644
  
          var url;
          url = this.pageUrl(page, hiRes);
-@@ -574,19 +574,19 @@
+@@ -574,19 +577,20 @@
          }
          return url && this.loadImage(url);
        },
@@ -1436,11 +1491,50 @@ index 68fc59b..02eee82 100644
        },
 -      makePolygonArray: function(face) {
 +      makePolygonArray: function (face) {
++        var this$1$1 = this;
          var bgPos, dRadian, dRotate, direction, i, image, j, lighting, m, originRight, pageMatrix, pageRotation, pageX, polygonWidth, progress, rad, radian, radius, ref, results, rotate, theta, x, x0, x1, z;
          if (!this.flip.direction) {
            return [];
-@@ -710,7 +710,7 @@
+@@ -597,7 +601,10 @@
+           progress = 1 - progress;
+           direction = this.forwardDirection;
          }
+-        this.flip.opacity = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++        var opacityVal = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++        queueMicrotask(function () {
++          if (this$1$1.flip.opacity !== opacityVal) this$1$1.flip.opacity = opacityVal;
++        });
+         image = face === 'front' ? this.flip.frontImage : this.flip.backImage;
+         polygonWidth = this.pageWidth / this.nPolygons;
+         pageX = this.xMargin;
+@@ -682,8 +689,8 @@
+           rotate = -rotate;
+           dRotate = -dRotate;
+         }
+-        this.minX = 2e308;
+-        this.maxX = -2e308;
++        var localMinX = 2e308;
++        var localMaxX = -2e308;
+         results = [];
+         for (i = j = 0, ref = this.nPolygons; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+           bgPos = (i / (this.nPolygons - 1) * 100) + "% 0px";
+@@ -701,16 +708,20 @@
+           m.rotateY(-rotate);
+           x0 = m.transformX(0);
+           x1 = m.transformX(polygonWidth);
+-          this.maxX = Math.max(Math.max(x0, x1), this.maxX);
+-          this.minX = Math.min(Math.min(x0, x1), this.minX);
++          localMaxX = Math.max(Math.max(x0, x1), localMaxX);
++          localMinX = Math.min(Math.min(x0, x1), localMinX);
+           lighting = this.computeLighting(pageRotation - rotate, dRotate);
+           radian += dRadian;
+           rotate += dRotate;
+           results.push([face + i, image, lighting, bgPos, m.toString(), Math.abs(Math.round(z))]);
+         }
++        queueMicrotask(function () {
++          if (this$1$1.minX !== localMinX) this$1$1.minX = localMinX;
++          if (this$1$1.maxX !== localMaxX) this$1$1.maxX = localMaxX;
++        });
          return results;
        },
 -      computeLighting: function(rot, dRotate) {
@@ -1448,7 +1542,7 @@ index 68fc59b..02eee82 100644
          var DEG, POW, blackness, diffuse, gradients, lightingPoints, specular;
          gradients = [];
          lightingPoints = [-0.5, -0.25, 0, 0.25, 0.5];
-@@ -725,13 +725,13 @@
+@@ -725,13 +736,13 @@
            DEG = 30;
            POW = 200;
            specular = lightingPoints.map(function (d) {
@@ -1464,7 +1558,7 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          if (direction !== this.forwardDirection) {
-@@ -772,7 +772,7 @@
+@@ -772,7 +783,7 @@
            });
          });
        },
@@ -1473,7 +1567,7 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          var animate, duration, startRatio, t0;
-@@ -789,14 +789,15 @@
+@@ -789,14 +800,15 @@
              if (ratio > 1) {
                ratio = 1;
              }
@@ -1492,7 +1586,7 @@ index 68fc59b..02eee82 100644
                }
                this$1$1.$emit(("flip-" + (this$1$1.flip.direction) + "-end"), this$1$1.page);
                if (this$1$1.displayedPages === 1 && this$1$1.flip.direction === this$1$1.forwardDirection) {
-@@ -812,7 +813,7 @@
+@@ -812,7 +824,7 @@
          };
          return animate();
        },
@@ -1501,7 +1595,7 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          var animate, duration, startRatio, t0;
-@@ -828,7 +829,7 @@
+@@ -828,7 +840,7 @@
              if (ratio < 0) {
                ratio = 0;
              }
@@ -1510,7 +1604,7 @@ index 68fc59b..02eee82 100644
              if (ratio > 0) {
                return animate();
              } else {
-@@ -847,12 +848,12 @@
+@@ -847,12 +859,12 @@
          };
          return animate();
        },
@@ -1525,7 +1619,7 @@ index 68fc59b..02eee82 100644
          if (this.imageWidth === null) {
            this.imageWidth = (ev.target || ev.path[0]).naturalWidth;
            this.imageHeight = (ev.target || ev.path[0]).naturalHeight;
-@@ -866,8 +867,8 @@
+@@ -866,8 +878,8 @@
            return this.imageLoadCallback = null;
          }
        },
@@ -1536,7 +1630,7 @@ index 68fc59b..02eee82 100644
  
          if (!this.canZoomIn) {
            return;
-@@ -875,8 +876,8 @@
+@@ -875,8 +887,8 @@
          this.zoomIndex += 1;
          return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
        },
@@ -1547,7 +1641,7 @@ index 68fc59b..02eee82 100644
  
          if (!this.canZoomOut) {
            return;
-@@ -884,9 +885,9 @@
+@@ -884,9 +896,9 @@
          this.zoomIndex -= 1;
          return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
        },
@@ -1559,7 +1653,7 @@ index 68fc59b..02eee82 100644
  
          var animate, containerFixedX, containerFixedY, end, endX, endY, fixedX, fixedY, rect, start, startX, startY, t0, viewport;
          viewport = this.$refs.viewport;
-@@ -918,9 +919,14 @@
+@@ -918,9 +930,14 @@
                ratio = 1;
              }
              ratio = easeInOut(ratio);
@@ -1577,7 +1671,7 @@ index 68fc59b..02eee82 100644
              if (t < this$1$1.zoomDuration) {
                return animate();
              } else {
-@@ -937,11 +943,11 @@
+@@ -937,11 +954,11 @@
            return this.preloadImages(true);
          }
        },
@@ -1591,7 +1685,7 @@ index 68fc59b..02eee82 100644
          this.touchStartX = touch.pageX;
          this.touchStartY = touch.pageY;
          this.maxMove = 0;
-@@ -955,7 +961,7 @@
+@@ -955,7 +972,7 @@
            return this.activeCursor = 'all-scroll';
          }
        },
@@ -1600,7 +1694,7 @@ index 68fc59b..02eee82 100644
          var x, y;
          if (this.touchStartX == null) {
            return;
-@@ -1000,7 +1006,7 @@
+@@ -1000,7 +1017,7 @@
          }
          return true;
        },
@@ -1609,7 +1703,7 @@ index 68fc59b..02eee82 100644
          if (this.touchStartX == null) {
            return;
          }
-@@ -1017,21 +1023,21 @@
+@@ -1017,21 +1034,21 @@
          this.touchStartX = null;
          return this.activeCursor = null;
        },
@@ -1635,7 +1729,7 @@ index 68fc59b..02eee82 100644
          this.hasPointerEvents = true;
          if (this.hasTouchEvents) {
            return;
-@@ -1046,12 +1052,12 @@
+@@ -1046,12 +1063,12 @@
  
          }
        },
@@ -1650,7 +1744,7 @@ index 68fc59b..02eee82 100644
          if (this.hasTouchEvents) {
            return;
          }
-@@ -1062,7 +1068,7 @@
+@@ -1062,7 +1079,7 @@
  
          }
        },
@@ -1659,7 +1753,7 @@ index 68fc59b..02eee82 100644
          if (this.hasTouchEvents || this.hasPointerEvents) {
            return;
          }
-@@ -1071,21 +1077,21 @@
+@@ -1071,21 +1088,21 @@
          }
          return this.swipeStart(ev);
        },
@@ -1685,7 +1779,7 @@ index 68fc59b..02eee82 100644
          if (this.wheel === 'scroll' && this.zoom > 1 && this.dragToScroll) {
            this.scrollLeft = this.$refs.viewport.scrollLeft + ev.deltaX;
            this.scrollTop = this.$refs.viewport.scrollTop + ev.deltaY;
-@@ -1103,8 +1109,8 @@
+@@ -1103,8 +1120,8 @@
            }
          }
        },
@@ -1696,7 +1790,7 @@ index 68fc59b..02eee82 100644
  
          var i, j, k, ref, ref1, ref2, ref3, src;
          for (i = j = ref = this.currentPage - 3, ref1 = this.currentPage + 3; (ref <= ref1 ? j <= ref1 : j >= ref1); i = ref <= ref1 ? ++j : --j) {
-@@ -1119,7 +1125,7 @@
+@@ -1119,7 +1136,7 @@
            }
          }
        },
@@ -1705,7 +1799,7 @@ index 68fc59b..02eee82 100644
          if (p === null || p === this.page) {
            return;
          }
-@@ -1136,7 +1142,7 @@
+@@ -1136,7 +1153,7 @@
          this.maxX = -2e308;
          return this.currentCenterOffset = this.centerOffset;
        },
@@ -1714,14 +1808,19 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          var img;
-@@ -1163,12 +1169,12 @@
+@@ -1163,12 +1180,15 @@
        }
      },
      watch: {
 -      currentPage: function() {
+-        this.firstPage = this.currentPage;
+-        this.secondPage = this.currentPage + 1;
 +      currentPage: function () {
-         this.firstPage = this.currentPage;
-         this.secondPage = this.currentPage + 1;
++        var this$1$1 = this;
++        queueMicrotask(function () {
++          if (this$1$1.firstPage !== this$1$1.currentPage) this$1$1.firstPage = this$1$1.currentPage;
++          if (this$1$1.secondPage !== this$1$1.currentPage + 1) this$1$1.secondPage = this$1$1.currentPage + 1;
++        });
          return this.preloadImages();
        },
 -      centerOffset: function() {
@@ -1729,14 +1828,16 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          var animate;
-@@ -1181,10 +1187,12 @@
+@@ -1181,18 +1201,21 @@
              rate = 0.1;
              diff = this$1$1.centerOffset - this$1$1.currentCenterOffset;
              if (Math.abs(diff) < 0.5) {
 -              this$1$1.currentCenterOffset = this$1$1.centerOffset;
+-              return this$1$1.animatingCenter = false;
 +              var targetOffset = this$1$1.centerOffset;
 +              queueMicrotask(function () { this$1$1.currentCenterOffset = targetOffset; });
-               return this$1$1.animatingCenter = false;
++              queueMicrotask(function () { if (this$1$1.animatingCenter !== false) this$1$1.animatingCenter = false; });
++              return;
              } else {
 -              this$1$1.currentCenterOffset += diff * rate;
 +              var newOffset = this$1$1.currentCenterOffset + diff * rate;
@@ -1744,8 +1845,9 @@ index 68fc59b..02eee82 100644
                return animate();
              }
            });
-@@ -1192,7 +1200,7 @@
-         this.animatingCenter = true;
+         };
+-        this.animatingCenter = true;
++        queueMicrotask(function () { if (this$1$1.animatingCenter !== true) this$1$1.animatingCenter = true; });
          return animate();
        },
 -      scrollLeftLimited: function(val) {
@@ -1753,7 +1855,7 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          if (this.IE) {
-@@ -1203,7 +1211,7 @@
+@@ -1203,7 +1226,7 @@
            return this.$refs.viewport.scrollLeft = val;
          }
        },
@@ -1762,7 +1864,7 @@ index 68fc59b..02eee82 100644
          var this$1$1 = this;
  
          if (this.IE) {
-@@ -1214,7 +1222,7 @@
+@@ -1214,7 +1237,7 @@
            return this.$refs.viewport.scrollTop = val;
          }
        },
@@ -1771,7 +1873,7 @@ index 68fc59b..02eee82 100644
          this.fixFirstPage();
          if (!(before != null ? before.length : void 0) && (after != null ? after.length : void 0)) {
            if (this.startPage > 1 && after[0] === null) {
-@@ -1222,7 +1230,7 @@
+@@ -1222,7 +1245,7 @@
            }
          }
        },
@@ -1780,7 +1882,7 @@ index 68fc59b..02eee82 100644
          return this.goToPage(p);
        }
      }
-@@ -1234,17 +1242,17 @@
+@@ -1234,17 +1257,17 @@
    function render(_ctx, _cache) {
      return (vue.openBlock(), vue.createElementBlock("div", null, [
        vue.renderSlot(_ctx.$slots, "default", vue.normalizeProps(vue.guardReactiveProps({
@@ -1809,7 +1911,7 @@ index 68fc59b..02eee82 100644
        vue.createElementVNode("div", {
          class: vue.normalizeClass(["viewport", {
            zoom: _ctx.zooming || _ctx.zoom > 1,
-@@ -1254,58 +1262,58 @@
+@@ -1254,58 +1277,58 @@
          style: vue.normalizeStyle({ cursor: _ctx.cursor == 'grabbing' ? 'grabbing' : 'auto' }),
          onTouchmove: _cache[7] || (_cache[7] = function () {
            var args = [], len = arguments.length;
@@ -1886,7 +1988,7 @@ index 68fc59b..02eee82 100644
        }, [
          vue.createElementVNode("div", {
            class: "flipbook-container",
-@@ -1316,51 +1324,51 @@
+@@ -1316,51 +1339,51 @@
              style: vue.normalizeStyle({ cursor: _ctx.canFlipLeft ? 'pointer' : 'auto' }),
              onClick: _cache[0] || (_cache[0] = function () {
                var args = [], len = arguments.length;
@@ -1964,7 +2066,7 @@ index 68fc59b..02eee82 100644
                : vue.createCommentVNode("v-if", true),
              vue.createElementVNode("div", {
                style: vue.normalizeStyle({ opacity: _ctx.flip.opacity })
-@@ -1377,14 +1385,14 @@
+@@ -1377,14 +1400,14 @@
                    class: vue.normalizeClass(["polygon", { blank: !bgImage }]),
                    key: key,
                    style: vue.normalizeStyle({
@@ -1987,7 +2089,7 @@ index 68fc59b..02eee82 100644
                  }, [
                    vue.withDirectives(vue.createElementVNode("div", {
                      class: "lighting",
-@@ -1406,22 +1414,22 @@
+@@ -1406,22 +1429,22 @@
                }),
                onTouchstart: _cache[4] || (_cache[4] = function () {
                  var args = [], len = arguments.length;
@@ -2016,7 +2118,7 @@ index 68fc59b..02eee82 100644
              }, null, 36 /* STYLE, HYDRATE_EVENTS */)
            ], 4 /* STYLE */)
          ], 4 /* STYLE */)
-@@ -1429,10 +1437,10 @@
+@@ -1429,10 +1452,10 @@
      ]))
    }
  
@@ -2030,7 +2132,7 @@ index 68fc59b..02eee82 100644
    script.render = render;
    script.__scopeId = "data-v-5c04eecf";
 diff --git a/node_modules/flipbook-vue/dist/flipbook.mjs b/node_modules/flipbook-vue/dist/flipbook.mjs
-index 7d9674c..cf55a17 100644
+index 7d9674c..f5df89d 100644
 --- a/node_modules/flipbook-vue/dist/flipbook.mjs
 +++ b/node_modules/flipbook-vue/dist/flipbook.mjs
 @@ -12,44 +12,44 @@ var Matrix = /*@__PURE__*/(function () {
@@ -2294,16 +2396,20 @@ index 7d9674c..cf55a17 100644
        var x;
        if (this.displayedPages === 1) {
          return this.viewWidth - this.xMargin;
-@@ -346,7 +346,7 @@ var script = {
+@@ -346,21 +346,24 @@ var script = {
          }
        }
      },
 -    centerOffset: function() {
 +    centerOffset: function () {
++      var this$1$1 = this;
        var retval;
        retval = this.centering ? Math.round(this.viewWidth / 2 - (this.boundingLeft + this.boundingRight) / 2) : 0;
        if (this.currentCenterOffset === null && this.imageWidth !== null) {
-@@ -354,13 +354,13 @@ var script = {
+-        this.currentCenterOffset = retval;
++        queueMicrotask(function () {
++          if (this$1$1.currentCenterOffset !== retval) this$1$1.currentCenterOffset = retval;
++        });
        }
        return retval;
      },
@@ -2320,7 +2426,7 @@ index 7d9674c..cf55a17 100644
        var w;
        w = (this.boundingRight - this.boundingLeft) * this.zoom;
        if (w < this.viewWidth) {
-@@ -369,7 +369,7 @@ var script = {
+@@ -369,7 +372,7 @@ var script = {
          return (this.boundingLeft + this.centerOffsetSmoothed) * this.zoom;
        }
      },
@@ -2329,7 +2435,7 @@ index 7d9674c..cf55a17 100644
        var w;
        w = (this.boundingRight - this.boundingLeft) * this.zoom;
        if (w < this.viewWidth) {
-@@ -378,7 +378,7 @@ var script = {
+@@ -378,7 +381,7 @@ var script = {
          return (this.boundingRight + this.centerOffsetSmoothed) * this.zoom - this.viewWidth;
        }
      },
@@ -2338,7 +2444,7 @@ index 7d9674c..cf55a17 100644
        var h;
        h = this.pageHeight * this.zoom;
        if (h < this.viewHeight) {
-@@ -387,7 +387,7 @@ var script = {
+@@ -387,7 +390,7 @@ var script = {
          return this.yMargin * this.zoom;
        }
      },
@@ -2347,7 +2453,7 @@ index 7d9674c..cf55a17 100644
        var h;
        h = this.pageHeight * this.zoom;
        if (h < this.viewHeight) {
-@@ -396,14 +396,14 @@ var script = {
+@@ -396,14 +399,14 @@ var script = {
          return (this.yMargin + this.pageHeight) * this.zoom - this.viewHeight;
        }
      },
@@ -2365,7 +2471,7 @@ index 7d9674c..cf55a17 100644
      window.addEventListener('resize', this.onResize, {
        passive: true
      });
-@@ -411,13 +411,13 @@ var script = {
+@@ -411,13 +414,13 @@ var script = {
      this.zoom = this.zooms_[0];
      return this.goToPage(this.startPage);
    },
@@ -2381,7 +2487,7 @@ index 7d9674c..cf55a17 100644
        var viewport;
        viewport = this.$refs.viewport;
        if (!viewport) {
-@@ -433,13 +433,13 @@ var script = {
+@@ -433,13 +436,13 @@ var script = {
        this.minX = 2e308;
        return this.maxX = -2e308;
      },
@@ -2398,7 +2504,7 @@ index 7d9674c..cf55a17 100644
  
        var url;
        if (hiRes && this.zoom > 1 && !this.zooming) {
-@@ -450,8 +450,8 @@ var script = {
+@@ -450,8 +453,8 @@ var script = {
        }
        return this.pages[page] || null;
      },
@@ -2409,7 +2515,7 @@ index 7d9674c..cf55a17 100644
  
        var url;
        url = this.pageUrl(page, hiRes);
-@@ -461,19 +461,19 @@ var script = {
+@@ -461,19 +464,20 @@ var script = {
        }
        return url && this.loadImage(url);
      },
@@ -2429,11 +2535,50 @@ index 7d9674c..cf55a17 100644
      },
 -    makePolygonArray: function(face) {
 +    makePolygonArray: function (face) {
++      var this$1$1 = this;
        var bgPos, dRadian, dRotate, direction, i, image, j, lighting, m, originRight, pageMatrix, pageRotation, pageX, polygonWidth, progress, rad, radian, radius, ref, results, rotate, theta, x, x0, x1, z;
        if (!this.flip.direction) {
          return [];
-@@ -597,7 +597,7 @@ var script = {
+@@ -484,7 +488,10 @@ var script = {
+         progress = 1 - progress;
+         direction = this.forwardDirection;
        }
+-      this.flip.opacity = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++      var opacityVal = this.displayedPages === 1 && progress > .7 ? 1 - (progress - .7) / .3 : 1;
++      queueMicrotask(function () {
++        if (this$1$1.flip.opacity !== opacityVal) this$1$1.flip.opacity = opacityVal;
++      });
+       image = face === 'front' ? this.flip.frontImage : this.flip.backImage;
+       polygonWidth = this.pageWidth / this.nPolygons;
+       pageX = this.xMargin;
+@@ -569,8 +576,8 @@ var script = {
+         rotate = -rotate;
+         dRotate = -dRotate;
+       }
+-      this.minX = 2e308;
+-      this.maxX = -2e308;
++      var localMinX = 2e308;
++      var localMaxX = -2e308;
+       results = [];
+       for (i = j = 0, ref = this.nPolygons; (0 <= ref ? j < ref : j > ref); i = 0 <= ref ? ++j : --j) {
+         bgPos = (i / (this.nPolygons - 1) * 100) + "% 0px";
+@@ -588,16 +595,20 @@ var script = {
+         m.rotateY(-rotate);
+         x0 = m.transformX(0);
+         x1 = m.transformX(polygonWidth);
+-        this.maxX = Math.max(Math.max(x0, x1), this.maxX);
+-        this.minX = Math.min(Math.min(x0, x1), this.minX);
++        localMaxX = Math.max(Math.max(x0, x1), localMaxX);
++        localMinX = Math.min(Math.min(x0, x1), localMinX);
+         lighting = this.computeLighting(pageRotation - rotate, dRotate);
+         radian += dRadian;
+         rotate += dRotate;
+         results.push([face + i, image, lighting, bgPos, m.toString(), Math.abs(Math.round(z))]);
+       }
++      queueMicrotask(function () {
++        if (this$1$1.minX !== localMinX) this$1$1.minX = localMinX;
++        if (this$1$1.maxX !== localMaxX) this$1$1.maxX = localMaxX;
++      });
        return results;
      },
 -    computeLighting: function(rot, dRotate) {
@@ -2441,7 +2586,7 @@ index 7d9674c..cf55a17 100644
        var DEG, POW, blackness, diffuse, gradients, lightingPoints, specular;
        gradients = [];
        lightingPoints = [-0.5, -0.25, 0, 0.25, 0.5];
-@@ -612,13 +612,13 @@ var script = {
+@@ -612,13 +623,13 @@ var script = {
          DEG = 30;
          POW = 200;
          specular = lightingPoints.map(function (d) {
@@ -2457,7 +2602,7 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        if (direction !== this.forwardDirection) {
-@@ -659,7 +659,7 @@ var script = {
+@@ -659,7 +670,7 @@ var script = {
          });
        });
      },
@@ -2466,7 +2611,7 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        var animate, duration, startRatio, t0;
-@@ -676,14 +676,15 @@ var script = {
+@@ -676,14 +687,15 @@ var script = {
            if (ratio > 1) {
              ratio = 1;
            }
@@ -2485,7 +2630,7 @@ index 7d9674c..cf55a17 100644
              }
              this$1$1.$emit(("flip-" + (this$1$1.flip.direction) + "-end"), this$1$1.page);
              if (this$1$1.displayedPages === 1 && this$1$1.flip.direction === this$1$1.forwardDirection) {
-@@ -699,7 +700,7 @@ var script = {
+@@ -699,7 +711,7 @@ var script = {
        };
        return animate();
      },
@@ -2494,7 +2639,7 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        var animate, duration, startRatio, t0;
-@@ -715,7 +716,7 @@ var script = {
+@@ -715,7 +727,7 @@ var script = {
            if (ratio < 0) {
              ratio = 0;
            }
@@ -2503,7 +2648,7 @@ index 7d9674c..cf55a17 100644
            if (ratio > 0) {
              return animate();
            } else {
-@@ -734,12 +735,12 @@ var script = {
+@@ -734,12 +746,12 @@ var script = {
        };
        return animate();
      },
@@ -2518,7 +2663,7 @@ index 7d9674c..cf55a17 100644
        if (this.imageWidth === null) {
          this.imageWidth = (ev.target || ev.path[0]).naturalWidth;
          this.imageHeight = (ev.target || ev.path[0]).naturalHeight;
-@@ -753,8 +754,8 @@ var script = {
+@@ -753,8 +765,8 @@ var script = {
          return this.imageLoadCallback = null;
        }
      },
@@ -2529,7 +2674,7 @@ index 7d9674c..cf55a17 100644
  
        if (!this.canZoomIn) {
          return;
-@@ -762,8 +763,8 @@ var script = {
+@@ -762,8 +774,8 @@ var script = {
        this.zoomIndex += 1;
        return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
      },
@@ -2540,7 +2685,7 @@ index 7d9674c..cf55a17 100644
  
        if (!this.canZoomOut) {
          return;
-@@ -771,9 +772,9 @@ var script = {
+@@ -771,9 +783,9 @@ var script = {
        this.zoomIndex -= 1;
        return this.zoomTo(this.zooms_[this.zoomIndex], zoomAt);
      },
@@ -2552,7 +2697,7 @@ index 7d9674c..cf55a17 100644
  
        var animate, containerFixedX, containerFixedY, end, endX, endY, fixedX, fixedY, rect, start, startX, startY, t0, viewport;
        viewport = this.$refs.viewport;
-@@ -805,9 +806,14 @@ var script = {
+@@ -805,9 +817,14 @@ var script = {
              ratio = 1;
            }
            ratio = easeInOut(ratio);
@@ -2570,7 +2715,7 @@ index 7d9674c..cf55a17 100644
            if (t < this$1$1.zoomDuration) {
              return animate();
            } else {
-@@ -824,11 +830,11 @@ var script = {
+@@ -824,11 +841,11 @@ var script = {
          return this.preloadImages(true);
        }
      },
@@ -2584,7 +2729,7 @@ index 7d9674c..cf55a17 100644
        this.touchStartX = touch.pageX;
        this.touchStartY = touch.pageY;
        this.maxMove = 0;
-@@ -842,7 +848,7 @@ var script = {
+@@ -842,7 +859,7 @@ var script = {
          return this.activeCursor = 'all-scroll';
        }
      },
@@ -2593,7 +2738,7 @@ index 7d9674c..cf55a17 100644
        var x, y;
        if (this.touchStartX == null) {
          return;
-@@ -887,7 +893,7 @@ var script = {
+@@ -887,7 +904,7 @@ var script = {
        }
        return true;
      },
@@ -2602,7 +2747,7 @@ index 7d9674c..cf55a17 100644
        if (this.touchStartX == null) {
          return;
        }
-@@ -904,21 +910,21 @@ var script = {
+@@ -904,21 +921,21 @@ var script = {
        this.touchStartX = null;
        return this.activeCursor = null;
      },
@@ -2628,7 +2773,7 @@ index 7d9674c..cf55a17 100644
        this.hasPointerEvents = true;
        if (this.hasTouchEvents) {
          return;
-@@ -933,12 +939,12 @@ var script = {
+@@ -933,12 +950,12 @@ var script = {
  
        }
      },
@@ -2643,7 +2788,7 @@ index 7d9674c..cf55a17 100644
        if (this.hasTouchEvents) {
          return;
        }
-@@ -949,7 +955,7 @@ var script = {
+@@ -949,7 +966,7 @@ var script = {
  
        }
      },
@@ -2652,7 +2797,7 @@ index 7d9674c..cf55a17 100644
        if (this.hasTouchEvents || this.hasPointerEvents) {
          return;
        }
-@@ -958,21 +964,21 @@ var script = {
+@@ -958,21 +975,21 @@ var script = {
        }
        return this.swipeStart(ev);
      },
@@ -2678,7 +2823,7 @@ index 7d9674c..cf55a17 100644
        if (this.wheel === 'scroll' && this.zoom > 1 && this.dragToScroll) {
          this.scrollLeft = this.$refs.viewport.scrollLeft + ev.deltaX;
          this.scrollTop = this.$refs.viewport.scrollTop + ev.deltaY;
-@@ -990,8 +996,8 @@ var script = {
+@@ -990,8 +1007,8 @@ var script = {
          }
        }
      },
@@ -2689,7 +2834,7 @@ index 7d9674c..cf55a17 100644
  
        var i, j, k, ref, ref1, ref2, ref3, src;
        for (i = j = ref = this.currentPage - 3, ref1 = this.currentPage + 3; (ref <= ref1 ? j <= ref1 : j >= ref1); i = ref <= ref1 ? ++j : --j) {
-@@ -1006,7 +1012,7 @@ var script = {
+@@ -1006,7 +1023,7 @@ var script = {
          }
        }
      },
@@ -2698,7 +2843,7 @@ index 7d9674c..cf55a17 100644
        if (p === null || p === this.page) {
          return;
        }
-@@ -1023,7 +1029,7 @@ var script = {
+@@ -1023,7 +1040,7 @@ var script = {
        this.maxX = -2e308;
        return this.currentCenterOffset = this.centerOffset;
      },
@@ -2707,14 +2852,19 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        var img;
-@@ -1050,12 +1056,12 @@ var script = {
+@@ -1050,12 +1067,15 @@ var script = {
      }
    },
    watch: {
 -    currentPage: function() {
+-      this.firstPage = this.currentPage;
+-      this.secondPage = this.currentPage + 1;
 +    currentPage: function () {
-       this.firstPage = this.currentPage;
-       this.secondPage = this.currentPage + 1;
++      var this$1$1 = this;
++      queueMicrotask(function () {
++        if (this$1$1.firstPage !== this$1$1.currentPage) this$1$1.firstPage = this$1$1.currentPage;
++        if (this$1$1.secondPage !== this$1$1.currentPage + 1) this$1$1.secondPage = this$1$1.currentPage + 1;
++      });
        return this.preloadImages();
      },
 -    centerOffset: function() {
@@ -2722,14 +2872,16 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        var animate;
-@@ -1068,10 +1074,12 @@ var script = {
+@@ -1068,18 +1088,21 @@ var script = {
            rate = 0.1;
            diff = this$1$1.centerOffset - this$1$1.currentCenterOffset;
            if (Math.abs(diff) < 0.5) {
 -            this$1$1.currentCenterOffset = this$1$1.centerOffset;
+-            return this$1$1.animatingCenter = false;
 +            var targetOffset = this$1$1.centerOffset;
 +            queueMicrotask(function () { this$1$1.currentCenterOffset = targetOffset; });
-             return this$1$1.animatingCenter = false;
++            queueMicrotask(function () { if (this$1$1.animatingCenter !== false) this$1$1.animatingCenter = false; });
++            return;
            } else {
 -            this$1$1.currentCenterOffset += diff * rate;
 +            var newOffset = this$1$1.currentCenterOffset + diff * rate;
@@ -2737,8 +2889,9 @@ index 7d9674c..cf55a17 100644
              return animate();
            }
          });
-@@ -1079,7 +1087,7 @@ var script = {
-       this.animatingCenter = true;
+       };
+-      this.animatingCenter = true;
++      queueMicrotask(function () { if (this$1$1.animatingCenter !== true) this$1$1.animatingCenter = true; });
        return animate();
      },
 -    scrollLeftLimited: function(val) {
@@ -2746,7 +2899,7 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        if (this.IE) {
-@@ -1090,7 +1098,7 @@ var script = {
+@@ -1090,7 +1113,7 @@ var script = {
          return this.$refs.viewport.scrollLeft = val;
        }
      },
@@ -2755,7 +2908,7 @@ index 7d9674c..cf55a17 100644
        var this$1$1 = this;
  
        if (this.IE) {
-@@ -1101,7 +1109,7 @@ var script = {
+@@ -1101,7 +1124,7 @@ var script = {
          return this.$refs.viewport.scrollTop = val;
        }
      },
@@ -2764,7 +2917,7 @@ index 7d9674c..cf55a17 100644
        this.fixFirstPage();
        if (!(before != null ? before.length : void 0) && (after != null ? after.length : void 0)) {
          if (this.startPage > 1 && after[0] === null) {
-@@ -1109,7 +1117,7 @@ var script = {
+@@ -1109,7 +1132,7 @@ var script = {
          }
        }
      },
@@ -2773,7 +2926,7 @@ index 7d9674c..cf55a17 100644
        return this.goToPage(p);
      }
    }
-@@ -1121,17 +1129,17 @@ var _hoisted_2 = ["src"];
+@@ -1121,17 +1144,17 @@ var _hoisted_2 = ["src"];
  function render(_ctx, _cache) {
    return (openBlock(), createElementBlock("div", null, [
      renderSlot(_ctx.$slots, "default", normalizeProps(guardReactiveProps({
@@ -2802,7 +2955,7 @@ index 7d9674c..cf55a17 100644
      createElementVNode("div", {
        class: normalizeClass(["viewport", {
          zoom: _ctx.zooming || _ctx.zoom > 1,
-@@ -1141,58 +1149,58 @@ function render(_ctx, _cache) {
+@@ -1141,58 +1164,58 @@ function render(_ctx, _cache) {
        style: normalizeStyle({ cursor: _ctx.cursor == 'grabbing' ? 'grabbing' : 'auto' }),
        onTouchmove: _cache[7] || (_cache[7] = function () {
          var args = [], len = arguments.length;
@@ -2879,7 +3032,7 @@ index 7d9674c..cf55a17 100644
      }, [
        createElementVNode("div", {
          class: "flipbook-container",
-@@ -1203,51 +1211,51 @@ function render(_ctx, _cache) {
+@@ -1203,51 +1226,51 @@ function render(_ctx, _cache) {
            style: normalizeStyle({ cursor: _ctx.canFlipLeft ? 'pointer' : 'auto' }),
            onClick: _cache[0] || (_cache[0] = function () {
              var args = [], len = arguments.length;
@@ -2957,7 +3110,7 @@ index 7d9674c..cf55a17 100644
              : createCommentVNode("v-if", true),
            createElementVNode("div", {
              style: normalizeStyle({ opacity: _ctx.flip.opacity })
-@@ -1264,14 +1272,14 @@ function render(_ctx, _cache) {
+@@ -1264,14 +1287,14 @@ function render(_ctx, _cache) {
                  class: normalizeClass(["polygon", { blank: !bgImage }]),
                  key: key,
                  style: normalizeStyle({
@@ -2980,7 +3133,7 @@ index 7d9674c..cf55a17 100644
                }, [
                  withDirectives(createElementVNode("div", {
                    class: "lighting",
-@@ -1293,22 +1301,22 @@ function render(_ctx, _cache) {
+@@ -1293,22 +1316,22 @@ function render(_ctx, _cache) {
              }),
              onTouchstart: _cache[4] || (_cache[4] = function () {
                var args = [], len = arguments.length;
@@ -3009,7 +3162,7 @@ index 7d9674c..cf55a17 100644
            }, null, 36 /* STYLE, HYDRATE_EVENTS */)
          ], 4 /* STYLE */)
        ], 4 /* STYLE */)
-@@ -1316,10 +1324,10 @@ function render(_ctx, _cache) {
+@@ -1316,10 +1339,10 @@ function render(_ctx, _cache) {
    ]))
  }
  
