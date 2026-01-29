@@ -43,9 +43,7 @@
   margin: 0;
   line-height: 1;
   font-weight: normal;
-  /* Less bold */
   word-spacing: 0.15em;
-  /* Reduced from 0.4em */
   text-align: right;
 }
 
