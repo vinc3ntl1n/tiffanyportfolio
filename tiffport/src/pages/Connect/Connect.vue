@@ -2,7 +2,7 @@
   <div class="connect">
     <div class="connect-container">
       <div class="connect-image">
-        <img src="/11-1.thumb128.png" alt="Profile" class="profile-image" />
+        <img :src="profileImage" alt="Profile" class="profile-image" />
       </div>
 
       <div class="connect-info">
@@ -27,6 +27,7 @@
 </template>
 
 <script setup lang="ts">
+import profileImage from '../../assets/img/LinT_Headshot.jpg'
 </script>
 
 <style>

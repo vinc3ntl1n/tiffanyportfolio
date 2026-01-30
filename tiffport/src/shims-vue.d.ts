@@ -28,3 +28,6 @@ declare module 'flipbook-vue' {
     }, {}, any>
     export default Flipbook
 }
+
+declare module '*.jpg'
+declare module '*.png'

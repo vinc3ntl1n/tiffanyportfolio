@@ -1,0 +1,16 @@
+{
+  "name": "Tiffany Lin Architecture",
+  "short_name": "Tiffany Lin",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FAF3ED",
+  "theme_color": "#3C0008",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "tiflogo-trans.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
