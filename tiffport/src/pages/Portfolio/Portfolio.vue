@@ -4,7 +4,7 @@
       <div v-for="(shelf, index) in shelves" :key="index" class="portfolio-shelf-container">
         <div class="portfolio-cards">
           <div v-for="book in shelf" :key="book.id" class="book-wrapper">
-             <h3 class="book-title-display">{{ book.title.includes(' - ') ? book.title.split(' - ')[1] : book.title }}</h3>
+
              <PortfolioCard 
                :title="book.title.includes(' - ') ? book.title.split(' - ')[1] : book.title" 
                @click="openBook(book.id)"
