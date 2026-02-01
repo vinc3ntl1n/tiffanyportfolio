@@ -46,7 +46,7 @@ const handlePageChange = (pageIndex: number) => {
 .book-reader {
   width: 100vw;
   height: 90vh;
-  background-color: #310e0e; 
+  background-color: #363636; 
   display: flex;
   flex-direction: column;
   align-items: center;

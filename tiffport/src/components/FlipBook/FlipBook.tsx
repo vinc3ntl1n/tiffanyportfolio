@@ -30,11 +30,11 @@ export function FlipBook({ pages, onPageChange }: FlipBookProps) {
         if (pageElements.length === 0) return
 
         const pageFlip = new PageFlip(bookRef.current, {
-            width: 350,
+            width: 450,
             height: 500,
             size: 'stretch',
-            minWidth: 200,
-            maxWidth: 500,
+            minWidth: 300,
+            maxWidth: 600,
             minHeight: 286,
             maxHeight: 714,
             showCover: true,
