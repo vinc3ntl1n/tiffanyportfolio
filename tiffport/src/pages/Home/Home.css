@@ -6,14 +6,7 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Garet';
-  src: url('../../assets/fonts/Garet-Bold.otf') format('opentype'),
-    url('../../assets/fonts/Garet-Bold.ttf') format('truetype'),
-    url('../../assets/fonts/Garet-Bold.woff2') format('woff2');
-  font-weight: bold;
-  font-style: normal;
-}
+
 
 .home {
   flex: 1;
@@ -76,7 +69,7 @@
 }
 
 .home-link {
-  font-family: 'Garet', 'Montserrat', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: bold;
   font-size: 16px;
   color: #000000;
