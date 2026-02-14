@@ -11,7 +11,7 @@
         <div class="contact-grid">
           <div class="contact-row">
             <span class="contact-label">EMAIL</span>
-            <a href="mailto:tiffqlin@gmail.com" class="contact-value">tiffqlin@gmail.com</a>
+            <a href="mailto:tiffany.ql@outlook.com" class="contact-value">tiffany.ql@outlook.com</a>
           </div>
           
           <div class="contact-row">
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import profileImage from '../../assets/img/LinT_Headshot.jpg'
+import profileImage from '../../assets/img/updated-headshot.jpg'
 </script>
 
 <style>

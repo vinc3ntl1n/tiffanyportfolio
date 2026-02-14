@@ -16,9 +16,7 @@
   --ground-color: #8B7355;
 
   --font-display: 'Playfair Display', Georgia, serif;
-  /* --font-display: Georgia, serif; */
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  /* --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; */
 }
 
 * {

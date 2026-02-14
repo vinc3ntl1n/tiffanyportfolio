@@ -16,7 +16,6 @@
   text-decoration: none;
   color: #000000;
   font-family: 'Montserrat', sans-serif;
-  /* font-family: 'Montserrat', sans-serif; */
   font-weight: normal;
   font-size: 18px;
   letter-spacing: 0.05em;
@@ -42,7 +41,7 @@
 }
 
 .layout--dark .navbar {
-  background-color: #3c280d;
+  background-color: #251A14;
 }
 
 .layout--dark .nav-link {
